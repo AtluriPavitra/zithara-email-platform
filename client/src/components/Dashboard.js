@@ -1,108 +1,104 @@
-import { useEffect, useState } from 'react';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
-import API from '../api';
+
+const openRateData = [
+  { name: 'Campaign A', value: 65 },
+  { name: 'Campaign B', value: 45 },
+  { name: 'Campaign C', value: 78 },
+];
+
+const pieData = [
+  { name: 'Opens', value: 400 },
+  { name: 'Clicks', value: 300 },
+  { name: 'Unsubscribes', value: 100 },
+];
+
+const COLORS = ['#28a745', '#007bff', '#dc3545'];
 
 const Dashboard = () => {
-  const [chartData, setChartData] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
-
-  useEffect(() => {
-    // Static chart data for now
-    setChartData([
-      { date: 'Apr 01', openRate: 50, ctr: 12 },
-      { date: 'Apr 02', openRate: 60, ctr: 14 },
-      { date: 'Apr 03', openRate: 68, ctr: 18 },
-      { date: 'Apr 04', openRate: 65, ctr: 17 },
-      { date: 'Apr 05', openRate: 70, ctr: 20 },
-    ]);
-
-    // Fetch user's recent campaigns
-    const fetchCampaigns = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const res = await API.get('/campaigns', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCampaigns(res.data.reverse().slice(0, 5)); // Show 5 latest
-      } catch (err) {
-        console.error('Failed to load campaigns', err);
-      }
-    };
-
-    fetchCampaigns();
-  }, []);
-
   return (
     <div>
-      <h3 className="mb-4">📈 Dashboard Overview</h3>
+      <h2 className="text-center mb-4">📊 Zithara Campaign Dashboard</h2>
 
-      {/* Stats Cards */}
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <div className="card p-3 shadow-sm">
-            <h5>Open Rate</h5>
-            <p className="text-success h4">65%</p>
-          </div>
-        </div>
-        <div className="col-md-6 mb-3">
-          <div className="card p-3 shadow-sm">
-            <h5>Click Through Rate</h5>
-            <p className="text-primary h4">18%</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Campaign Performance Chart */}
-      <div className="card p-4 shadow-sm mt-3">
-        <h5>📊 Campaign Performance</h5>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis domain={[0, 100]} />
-            <Tooltip />
-            <Line type="monotone" dataKey="openRate" stroke="#28a745" name="Open Rate" />
-            <Line type="monotone" dataKey="ctr" stroke="#007bff" name="CTR" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Recent Campaigns */}
-      <div className="card p-3 shadow-sm mt-4">
-        <h5>📬 Recent Campaigns</h5>
-        {campaigns.length === 0 ? (
-          <p className="text-muted">No campaigns yet.</p>
-        ) : (
-          <ul className="list-group">
-            {campaigns.map((c) => (
-              <li key={c._id} className="list-group-item">
-                <strong>{c.subject}</strong> – {c.recipients.length} recipients
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* AI Insights (Optional future upgrade) */}
-      <div className="card p-3 shadow-sm mt-4">
-        <h5>🧠 AI Insight</h5>
-        <p className="text-muted">
-          Your campaigns perform better mid-week. Try sending emails on Tuesdays or Wednesdays between 10–11 AM for higher engagement.
+      <div className="card p-3 mb-4 shadow-sm">
+        <h5>About Zithara</h5>
+        <p>
+          <strong>Zithara.ai</strong> is an AI-powered customer analytics and engagement platform
+          that empowers retail brands to build smarter, personalized campaigns using cutting-edge AI.
+          This dashboard allows admins and core users to launch campaigns and track key metrics like open rate, click-through rate, and performance trends.
         </p>
+      </div>
+
+      <div className="row">
+        {/* Bar Chart Card */}
+        <div className="col-md-6 mb-4">
+          <div className="card p-3 shadow-sm">
+            <h5>📈 Open Rate Comparison</h5>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={openRateData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#007bff" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Pie Chart Card */}
+        <div className="col-md-6 mb-4">
+          <div className="card p-3 shadow-sm">
+            <h5>📊 Engagement Overview</h5>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Card */}
+      <div className="row">
+        <div className="col-md-4 mb-3">
+          <div className="card bg-light p-3 text-center border-0 shadow-sm">
+            <h6>Total Campaigns</h6>
+            <p className="h4 text-primary">12</p>
+          </div>
+        </div>
+        <div className="col-md-4 mb-3">
+          <div className="card bg-light p-3 text-center border-0 shadow-sm">
+            <h6>Avg Open Rate</h6>
+            <p className="h4 text-success">63%</p>
+          </div>
+        </div>
+        <div className="col-md-4 mb-3">
+          <div className="card bg-light p-3 text-center border-0 shadow-sm">
+            <h6>Click Rate</h6>
+            <p className="h4 text-info">22%</p>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Dashboard;
+
 
 
   
