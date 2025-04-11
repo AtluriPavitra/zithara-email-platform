@@ -1,2 +1,9 @@
 node_modules
 node_modules
+node_modules/
+.cache/
+*.pack
+*.log
+*.zip
+client/node_modules/
+client/node_modules/.cache/

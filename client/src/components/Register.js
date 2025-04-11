@@ -13,7 +13,8 @@ const Register = () => {
       alert('Registration successful');
       navigate('/login');
     } catch (err) {
-      alert('Registration failed');
+      console.error('Registration Error:', err.response?.data || err.message);
+      alert(`Registration failed: ${err.response?.data?.error || 'Please try again.'}`);
     }
   };
 
@@ -23,23 +24,38 @@ const Register = () => {
       <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
         <div className="mb-3">
           <label>Name</label>
-          <input type="text" className="form-control" required
-            onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <input
+            type="text"
+            className="form-control"
+            required
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
         </div>
         <div className="mb-3">
           <label>Email</label>
-          <input type="email" className="form-control" required
-            onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <input
+            type="email"
+            className="form-control"
+            required
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
         </div>
         <div className="mb-3">
           <label>Password</label>
-          <input type="password" className="form-control" required
-            onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <input
+            type="password"
+            className="form-control"
+            required
+            minLength={6}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
         </div>
         <div className="mb-3">
           <label>Role</label>
-          <select className="form-select"
-            onChange={(e) => setForm({ ...form, role: e.target.value })}>
+          <select
+            className="form-select"
+            onChange={(e) => setForm({ ...form, role: e.target.value })}
+          >
             <option value="core">Core</option>
             <option value="admin">Admin</option>
           </select>
@@ -54,3 +70,4 @@ const Register = () => {
 };
 
 export default Register;
+
