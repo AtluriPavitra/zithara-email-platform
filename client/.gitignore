@@ -28,6 +28,7 @@ server/.env
 # React
 client/node_modules/
 client/build/
+client/node_modules/.cache/
 
 # Logs
 *.log
