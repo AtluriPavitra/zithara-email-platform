@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import campaignRoutes from './routes/campaignRoutes.js';
 
 dotenv.config();
+console.log('Loaded JWT_SECRET:', process.env.JWT_SECRET);
 
 const app = express();
 
